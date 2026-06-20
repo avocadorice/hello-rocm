@@ -1,0 +1,22 @@
+# Real ROCm inference image. Built on AMD's official PyTorch-on-ROCm base so the
+# identical pipeline you ran on a Mac runs on Instinct/Radeon hardware.
+#
+#   docker build -f Dockerfile.rocm -t sitevision:rocm .
+#   docker run --rm --device=/dev/kfd --device=/dev/dri \
+#     --security-opt seccomp=unconfined --group-add video \
+#     sitevision:rocm python -m sitevision.cli bench --frames 200 --backend hf
+FROM rocm/pytorch:latest
+
+WORKDIR /app
+COPY requirements.txt pyproject.toml ./
+COPY src ./src
+
+# torch ships in the base image; add the VLM + app deps.
+RUN pip install --no-cache-dir pillow numpy transformers accelerate && \
+    pip install --no-cache-dir -e .
+
+ENV PYTHONUNBUFFERED=1
+# Uncomment and set for your GPU if auto-detection misfires (e.g. gfx1100):
+# ENV HSA_OVERRIDE_GFX_VERSION=11.0.0
+
+CMD ["python", "-m", "sitevision.cli", "bench", "--frames", "200", "--backend", "hf"]

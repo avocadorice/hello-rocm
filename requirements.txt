@@ -1,0 +1,14 @@
+# Core — needed for the stub pipeline + benchmark (runs on a Mac, no GPU)
+numpy>=1.26
+pillow>=10.0
+
+# Real VLM backend (--backend hf). torch wheel is platform-specific:
+#   Mac (MPS/CPU):  pip install torch torchvision
+#   AMD ROCm:       installed inside Dockerfile.rocm from the rocm/pytorch base
+#   NVIDIA CUDA:    pip install torch --index-url https://download.pytorch.org/whl/cu124
+# torch>=2.3
+# transformers>=4.44
+# accelerate>=0.33
+
+# Optional: real video decoding instead of synthetic frames
+# opencv-python-headless>=4.9
