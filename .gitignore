@@ -8,3 +8,7 @@ dist/
 *.json.out
 bench-*.json
 .DS_Store
+
+# Local-only sample footage (third-party / copyrighted video — do not publish)
+sample_data/
+*.mp4

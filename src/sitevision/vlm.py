@@ -72,6 +72,7 @@ class HFVLM:
     name = "hf"
 
     def __init__(self, model_id: str = "vikhyatk/moondream2",
+                 revision: str = "2024-08-26",
                  device: Device | None = None):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -79,9 +80,10 @@ class HFVLM:
         self.device = device or detect()
         dtype = torch.float16 if self.device.is_accelerated else torch.float32
         self.model = AutoModelForCausalLM.from_pretrained(
-            model_id, trust_remote_code=True, torch_dtype=dtype,
+            model_id, revision=revision, trust_remote_code=True,
+            torch_dtype=dtype,
         ).to(self.device.torch_device)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_id)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
 
     def analyze(self, frame: Frame) -> SceneRecord:
         t0 = time.perf_counter()
